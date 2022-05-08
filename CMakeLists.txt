@@ -33,9 +33,16 @@ ament_target_dependencies(ros2_launch_talker
   std_msgs
 )
 
+# Install executables
 install(TARGETS
   ros2_launch_talker
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install directories
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 if(BUILD_TESTING)
