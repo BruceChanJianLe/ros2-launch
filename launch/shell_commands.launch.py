@@ -29,7 +29,7 @@ def generate_launch_description():
         ]],
         shell=True,
         output={
-            'stdout' : 'screen'
+            'stdout' : 'screen',
             'stderr' : 'screen'
         },
     )
