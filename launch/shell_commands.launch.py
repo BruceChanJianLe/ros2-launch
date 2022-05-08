@@ -27,7 +27,11 @@ def generate_launch_description():
             'echo ',
             'say_something'
         ]],
-        shell=True
+        shell=True,
+        output={
+            'stdout' : 'screen'
+            'stderr' : 'screen'
+        },
     )
 
     # Set param
