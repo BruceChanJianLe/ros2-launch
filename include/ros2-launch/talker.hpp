@@ -21,6 +21,8 @@ namespace ros2_launch
         ~talker();
     private:
         size_t count_;
+        // Params
+        int param1_, param2_;
         rclcpp::Publisher<std_msgs::msg::UInt16>::SharedPtr pub_;
         rclcpp::TimerBase::SharedPtr timer_;
         void run();
