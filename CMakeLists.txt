@@ -24,6 +24,7 @@ include_directories(
   include
 )
 
+# Talker node
 add_executable(ros2_launch_talker
   src/talker_node.cpp
   src/talker.cpp
@@ -33,9 +34,20 @@ ament_target_dependencies(ros2_launch_talker
   std_msgs
 )
 
+# Listener node
+add_executable(ros2_launch_listener
+  src/listener_node.cpp
+  src/listener.cpp
+)
+ament_target_dependencies(ros2_launch_listener
+  rclcpp
+  std_msgs
+)
+
 # Install executables
 install(TARGETS
   ros2_launch_talker
+  ros2_launch_listener
   DESTINATION lib/${PROJECT_NAME}
 )
 
