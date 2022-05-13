@@ -8,9 +8,10 @@ from launch.substitutions import LaunchConfiguration
 # Event Handler
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnExecutionComplete, OnProcessExit, OnProcessIO, OnProcessStart, OnShutdown
-from launch.actions import ExecuteProcess, LogInfo, TimerAction
+from launch.actions import ExecuteProcess, LogInfo, TimerAction, EmitEvent
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import PythonExpression
+from launch.substitutions import PythonExpression, EnvironmentVariable, LocalSubstitution
+from launch.events import Shutdown
 
 ARGUMENTS = [
     DeclareLaunchArgument(
@@ -74,14 +75,34 @@ def generate_launch_description():
             )
         )
 
-        # On Process Complete
+        # On Process Complete, WARNING: This example is not working as expected
         on_process_complete = RegisterEventHandler(
             OnExecutionComplete(
-                target_action=trigger_exec,
+                target_action=on_process_io,
                 on_completion=[
                     LogInfo(msg='Trigger has been called!'),
-                    TimerAction(period=2.0, actions=[ExecuteProcess(cmd=[['ros2 topic pub /ros2_launch_talker/channel std_msgs/msg/UInt16 "data: 99" --once']], shell=True)]),
-                    # ExecuteProcess(cmd='ros2 topic pub /ros2_launch_talker/channel std_msgs/msg/UInt16 "data: 99" --once', shell=True)
+                    # TimerAction(period=2.0, actions=[ExecuteProcess(cmd=[['ros2 topic pub /ros2_launch_talker/channel std_msgs/msg/UInt16 "data: 99" --once']], shell=True)]),
+                    ExecuteProcess(cmd=[['ros2 topic pub /ros2_launch_talker/channel std_msgs/msg/UInt16 "data: 99" --once']], shell=True)
+                ]
+            )
+        )
+
+        # On Process Exit
+        on_process_exit = RegisterEventHandler(
+            OnProcessExit(
+                target_action=listener_node,
+                on_exit=[
+                    LogInfo(msg=(EnvironmentVariable(name='USERNAME'), ' closed the listener_node.')),
+                    EmitEvent(event=Shutdown(reason='nodes killed.'))
+                ]
+            )
+        )
+
+        # On Shutdown
+        on_shutdown = RegisterEventHandler(
+            OnShutdown(
+                on_shutdown=[
+                    LogInfo(msg=['Launch was asked to shutdown: ', LocalSubstitution('event.reason')])
                 ]
             )
         )
@@ -93,6 +114,8 @@ def generate_launch_description():
         ld.add_action(trigger_exec)
         ld.add_action(on_process_io)
         ld.add_action(on_process_complete)
+        ld.add_action(on_process_exit)
+        ld.add_action(on_shutdown)
 
         # Return launch description
         return ld
