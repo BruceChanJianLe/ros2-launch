@@ -1,0 +1,4 @@
+ros2_launch_talker_node:
+   ros__parameters:
+      param1: 255
+      param2: 86
