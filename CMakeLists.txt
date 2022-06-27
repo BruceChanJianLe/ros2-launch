@@ -55,6 +55,7 @@ install(TARGETS
 install(DIRECTORY
   launch
   config
+  rviz2
   DESTINATION share/${PROJECT_NAME}/
 )
 
