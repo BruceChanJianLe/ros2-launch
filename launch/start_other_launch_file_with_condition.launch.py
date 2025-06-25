@@ -9,6 +9,9 @@ from launch_ros.substitutions import FindPackageShare
 # Launch condition
 from launch.conditions import IfCondition
 from launch.substitutions import EqualsSubstitution, LaunchConfiguration
+# Available conditions
+# from launch.substitutions import (EqualsSubstitution, LaunchConfiguration, NotEqualsSubstitution,
+#                                   PythonExpression)
 
 ARGUMENTS = [
     DeclareLaunchArgument(
